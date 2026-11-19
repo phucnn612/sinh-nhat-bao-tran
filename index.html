@@ -88,6 +88,8 @@
     <span class="melon">🍉</span>
     <button class="close" aria-label="Đóng">✕</button>
     <h2>Gửi Bảo Trân,</h2>
+    <button id="voiceBtn" style="font-family:inherit;font-weight:700;border:0;background:var(--pink);color:#fff;padding:8px 16px;border-radius:999px;cursor:pointer;margin-bottom:10px">🔊 Nghe lời chúc</button>
+    <audio id="voice" src="voice.mp3" preload="auto"></audio>
     <!-- ✏️ ĐIỀN NỘI DUNG LÁ THƯ VÀO ĐÂY -->
     <p id="letterText">Chúc mừng sinh nhật 19 tuổi! 🎂
 
@@ -187,9 +189,13 @@ const gift=document.getElementById('gift'),ov=document.getElementById('overlay')
 gift.addEventListener('click',()=>{
   gift.classList.add('open');
   const r=gift.getBoundingClientRect();burst(r.left+r.width/2,r.top,250);
-  setTimeout(()=>ov.classList.add('show'),700);
+  setTimeout(()=>{ov.classList.add('show');playVoice()},700);
 });
-function closeL(){ov.classList.remove('show');setTimeout(()=>gift.classList.remove('open'),300);setTimeout(()=>formShape(shape),500)}
+const voice=document.getElementById('voice'),vb=document.getElementById('voiceBtn');
+function playVoice(){voice.currentTime=0;if(master)master.gain.value=playing?.08:0;voice.play().catch(()=>{});vb.textContent='⏸️ Đang phát...'}
+voice.addEventListener('ended',()=>{if(master&&playing)master.gain.value=.5;vb.textContent='🔁 Nghe lại lời chúc'});
+vb.onclick=()=>{if(voice.paused)playVoice();else{voice.pause();if(master&&playing)master.gain.value=.5;vb.textContent='🔊 Nghe tiếp'}};
+function closeL(){voice.pause();if(master&&playing)master.gain.value=.5;ov.classList.remove('show');setTimeout(()=>gift.classList.remove('open'),300);setTimeout(()=>formShape(shape),500)}
 ov.querySelector('.close').onclick=closeL;
 ov.addEventListener('click',e=>{if(e.target===ov)closeL()});
 
